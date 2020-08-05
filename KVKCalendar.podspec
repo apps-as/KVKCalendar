@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'KVKCalendar'
-  s.version          = '0.3.4.1'
+  s.version          = '0.3.4'
   s.summary          = 'A most fully customization calendar library for iOS.'
   
   s.description      = <<-DESC
@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   Timeline displays the schedule for the day and week.
                        DESC
 
-  s.homepage         = 'https://github.com/tamasoszko/KVKCalendar'
+  s.homepage         = 'https://github.com/kvyatkovskys/KVKCalendar'
   s.license          = { :type => 'MIT', :file => 'LICENSE.md' }
   s.author           = { 'Sergei Kviatkovskii' => 'sergejkvyatkovskij@gmail.com' }
   s.source           = { :git => 'https://github.com/kvyatkovskys/KVKCalendar.git', :tag => s.version.to_s }
