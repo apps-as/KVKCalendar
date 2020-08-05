@@ -7,25 +7,13 @@
 
 import Foundation
 
-struct CrossEvent: Hashable {
-    let eventTime: EventTime
-    var count: Int
-    
-    init(eventTime: EventTime, count: Int = 1) {
-        self.eventTime = eventTime
-        self.count = count
+struct EventLayoutDescriptor: Identifiable {
+    var id: String {
+        return event.ID
     }
-    
-    static func == (lhs: CrossEvent, rhs: CrossEvent) -> Bool {
-        return lhs.eventTime == rhs.eventTime
-            && lhs.count == rhs.count
-    }
-}
-
-extension CrossEvent {
-    var displayValue: String {
-        return "\(Date(timeIntervalSince1970: eventTime.start).toLocalTime()) - \(Date(timeIntervalSince1970: eventTime.end).toLocalTime()) = \(count)"
-    }
+    let event: Event
+    var intesectingEvents: [Event] = .init()
+    var widthPercetage: CGFloat = 1.0
 }
 
 struct EventTime: Equatable, Hashable {

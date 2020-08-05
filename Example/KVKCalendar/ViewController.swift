@@ -15,7 +15,7 @@ final class ViewController: UIViewController {
     private var selectDate: Date = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd.MM.yyyy"
-        return formatter.date(from: "14.12.2018") ?? Date()
+        return formatter.date(from: "13.12.2018") ?? Date()
     }()
     
     private lazy var todayButton: UIBarButtonItem = {
@@ -36,11 +36,12 @@ final class ViewController: UIViewController {
         }
         style.timeline.startFromFirstEvent = false
         style.followInSystemTheme = true
-        style.timeline.offsetTimeY = 80
-        style.timeline.offsetEvent = 3
+        style.timeline.offsetTimeY = 50
+        style.timeline.offsetEvent = 0.5
         style.timeline.currentLineHourWidth = 40
+        style.timeline.heightTime = 50
         style.allDay.isPinned = true
-        style.startWeekDay = .sunday
+        style.startWeekDay = .monday
         style.timeHourSystem = .twelveHour
         style.event.isEnableMoveEvent = true
         return style
@@ -194,11 +195,18 @@ extension ViewController {
             let endDate = self.formatter(date: item.end)
             let startTime = self.timeFormatter(date: startDate)
             let endTime = self.timeFormatter(date: endDate)
-            
+
+            var newEndDate = endDate
+
+            let duration = endDate.timeIntervalSince(startDate)
+            if duration < 900 {
+                newEndDate += 900 - duration
+            }
+
             var event = Event()
             event.ID = item.id
             event.start = startDate
-            event.end = endDate
+            event.end = newEndDate
             event.color = EventColor(item.color)
             event.isAllDay = item.allDay
             event.isContainsFile = !item.files.isEmpty

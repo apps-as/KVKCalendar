@@ -221,33 +221,7 @@ final class TimelineView: UIView, CompareEventDateProtocol {
         line.isHidden = !style.week.showVerticalDayDivider
         return line
     }
-    
-    private func calculateCrossEvents(_ events: [Event]) -> [TimeInterval: CrossEvent] {
-        var eventsTemp = events
-        var crossEvents = [TimeInterval: CrossEvent]()
         
-        while let event = eventsTemp.first {
-            let start = event.start.timeIntervalSince1970
-            let end = event.end.timeIntervalSince1970
-            var crossEventNew = CrossEvent(eventTime: EventTime(start: start, end: end))
-            
-            let endCalculated: TimeInterval = crossEventNew.eventTime.end - TimeInterval(style.timeline.offsetEvent)
-            let eventsFiltered = events.filter({ (item) in
-                let itemEnd = item.end.timeIntervalSince1970 - TimeInterval(style.timeline.offsetEvent)
-                let itemStart = item.start.timeIntervalSince1970
-                return (itemStart...itemEnd).contains(start) || (itemStart...itemEnd).contains(endCalculated) || (start...endCalculated).contains(itemStart) || (start...endCalculated).contains(itemEnd)
-            })
-            if !eventsFiltered.isEmpty {
-                crossEventNew.count = eventsFiltered.count
-            }
-
-            crossEvents[crossEventNew.eventTime.start] = crossEventNew
-            eventsTemp.removeFirst()
-        }
-        
-        return crossEvents
-    }
-    
     private func createAllDayEvents(events: [Event], date: Date?, width: CGFloat, originX: CGFloat) {
         guard !events.isEmpty else { return }
         let pointY = style.allDay.isPinned ? 0 : -style.allDay.height
@@ -476,8 +450,8 @@ final class TimelineView: UIView, CompareEventDateProtocol {
             let allDayEvents = filteredAllDayEvents.filter({ compareStartDate(event: $0, date: date) || compareEndDate(event: $0, date: date) })
             createAllDayEvents(events: allDayEvents, date: date, width: widthPage, originX: pointX)
             
-            // count event cross in one hour
-            let crossEvents = calculateCrossEvents(eventsByDate)
+            // get layout descriptors
+            let layoutDescriptors = createLayoutDescriptors(from: eventsByDate)
             var pagesCached = [EventViewGeneral]()
             
             if !eventsByDate.isEmpty {
@@ -493,7 +467,7 @@ final class TimelineView: UIView, CompareEventDateProtocol {
                         if event.end.hour.hashValue == time.valueHash {
                             let summHeight = (CGFloat(time.tag) * (style.timeline.offsetTimeY + time.frame.height)) - newFrame.origin.y + (time.frame.height / 2)
                             if 0..<59 ~= event.end.minute {
-                                let minutePercent = 59.0 / CGFloat(event.end.minute)
+                                let minutePercent =     59.0 / CGFloat(event.end.minute)
                                 let newY = (style.timeline.offsetTimeY + time.frame.height) / minutePercent
                                 newFrame.size.height = summHeight + newY - style.timeline.offsetEvent
                             } else {
@@ -505,12 +479,12 @@ final class TimelineView: UIView, CompareEventDateProtocol {
                     // calculate 'width' and position 'x'
                     var newWidth = widthPage
                     var newPointX = pointX
-                    if let crossEvent = crossEvents[event.start.timeIntervalSince1970] {
-                        newWidth /= CGFloat(crossEvent.count)
+                    if let layoutDescriptor = layoutDescriptors.first(where: { $0.id == event.ID }) {
+                        newWidth *= layoutDescriptor.widthPercetage
                         newWidth -= style.timeline.offsetEvent
                         newFrame.size.width = newWidth
                         
-                        if crossEvent.count > 1, !pagesCached.isEmpty {
+                        if layoutDescriptor.intesectingEvents.count > 0, !pagesCached.isEmpty {
                             for page in pagesCached {
                                 while page.frame.intersects(CGRect(x: newPointX, y: newFrame.origin.y, width: newFrame.width, height: newFrame.height)) {
                                     newPointX += (page.frame.width + style.timeline.offsetEvent).rounded()
