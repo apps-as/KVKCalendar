@@ -7,32 +7,6 @@
 
 import UIKit
 
-final class AllDayTitleView: UIView {
-    init(frame: CGRect, style: AllDayStyle) {
-        super.init(frame: frame)
-        backgroundColor = style.backgroundColor
-        
-        let label = UILabel(frame: frame)
-        label.frame.size.width = frame.width - 4
-        label.frame.origin.x = 2
-        label.frame.origin.y = 0
-        label.textAlignment = .center
-        label.numberOfLines = 2
-        label.font = style.fontTitle
-        label.textColor = style.titleColor
-        label.text = style.titleText
-        addSubview(label)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-protocol AllDayEventDelegate: AnyObject {
-    func didSelectAllDayEvent(_ event: Event, frame: CGRect?)
-}
-
 final class AllDayEventView: UIView {
     private let events: [Event]
     weak var delegate: AllDayEventDelegate?
@@ -46,7 +20,7 @@ final class AllDayEventView: UIView {
         let endEvents = events.map({ AllDayEvent(id: $0.ID, text: $0.text, date: $0.end, color: EventColor($0.color?.value ?? $0.backgroundColor).value) })
         let result = startEvents + endEvents
         let distinct = result.reduce([]) { (acc, event) -> [AllDayEvent] in
-            guard acc.contains(where: { $0.date.day == event.date.day && "\($0.id)".hashValue == "\(event.id)".hashValue }) else {
+            guard acc.contains(where: { $0.date.day == event.date.day && $0.id.hashValue == event.id.hashValue }) else {
                 return acc + [event]
             }
             return acc
@@ -55,16 +29,16 @@ final class AllDayEventView: UIView {
         
         let eventWidth = frame.width / CGFloat(filtered.count)
         for (idx, event) in filtered.enumerated() {
-            let label = UILabel(frame: CGRect(x: (CGFloat(idx) * eventWidth) + style.offset,
-                                              y: style.offset,
-                                              width: eventWidth - (style.offset * 2),
-                                              height: frame.height - (style.offset * 2)))
+            let label = UILabel(frame: CGRect(x: (CGFloat(idx) * eventWidth) + style.offsetWidth,
+                                              y: style.offsetHeight,
+                                              width: eventWidth - (style.offsetWidth * 2),
+                                              height: frame.height - (style.offsetHeight * 2)))
             label.textColor = style.textColor
             label.isUserInteractionEnabled = true
             label.font = style.font
             label.text = " \(event.text)"
             label.backgroundColor = event.color.withAlphaComponent(0.8)
-            label.tag = "\(event.id)".hashValue
+            label.tag = event.id.hashValue
             label.setRoundCorners(style.eventCorners, radius: style.eventCornersRadius)
             let tap = UITapGestureRecognizer(target: self, action: #selector(tapOnEvent))
             label.addGestureRecognizer(tap)
@@ -97,4 +71,30 @@ extension AllDayEvent: EventProtocol {
     func compare(_ event: Event) -> Bool {
         return id.hashValue == event.hash
     }
+}
+
+final class AllDayTitleView: UIView {
+    init(frame: CGRect, style: AllDayStyle) {
+        super.init(frame: frame)
+        backgroundColor = style.backgroundColor
+        
+        let label = UILabel(frame: frame)
+        label.frame.size.width = frame.width - 4
+        label.frame.origin.x = 2
+        label.frame.origin.y = 0
+        label.textAlignment = .center
+        label.numberOfLines = 2
+        label.font = style.fontTitle
+        label.textColor = style.titleColor
+        label.text = style.titleText
+        addSubview(label)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+protocol AllDayEventDelegate: AnyObject {
+    func didSelectAllDayEvent(_ event: Event, frame: CGRect?)
 }

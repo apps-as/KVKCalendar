@@ -59,30 +59,44 @@ public struct EventColor {
 }
 
 public struct Event {
-    @available(swift, obsoleted: 0.3.4, message: "This will be removed in v0.3.5, please migrate to a ID.")
-    public var id: Any = 0
-    public var ID: String = "0"
-    public var text: String = ""
-    public var start: Date = Date()
-    public var end: Date = Date()
-    public var color: EventColor? = nil {
+    public var ID: String
+    public var text: String
+    public var start: Date
+    public var end: Date
+    public var color: EventColor? {
         didSet {
             guard let valueColor = color else { return }
             
             backgroundColor = valueColor.value.withAlphaComponent(valueColor.alpha)
             var hue: CGFloat = 0, saturation: CGFloat = 0, brightness: CGFloat = 0, alpha: CGFloat = 0
             valueColor.value.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
-            colorText = UIColor(hue: hue, saturation: saturation, brightness: UIScreen.isDarkMode ? brightness : brightness * 0.4, alpha: alpha)
+            textColor = UIColor(hue: hue, saturation: saturation, brightness: UIScreen.isDarkMode ? brightness : brightness * 0.4, alpha: alpha)
         }
     }
-    public var backgroundColor: UIColor = UIColor.systemBlue.withAlphaComponent(0.3)
+    public var backgroundColor: UIColor
+    @available(swift, deprecated: 0.3.5, obsoleted: 0.3.6, message: "This will be removed in v0.3.6, please migrate to a `textColor`", renamed: "textColor")
     public var colorText: UIColor = .black
-    public var isAllDay: Bool = false
-    public var isContainsFile: Bool = false
-    public var textForMonth: String = ""
+    public var textColor: UIColor
+    public var isAllDay: Bool
+    public var isContainsFile: Bool
+    public var textForMonth: String
     public var eventData: Any?
+    public var recurringType: RecurringType
     
-    public init() {}
+    public init(ID: String = "0", text: String = "", start: Date = Date(), end: Date = Date(), color: EventColor? = nil, backgroundColor: UIColor = UIColor.systemBlue.withAlphaComponent(0.3), textColor: UIColor = .black, isAllDay: Bool = false, isContainsFile: Bool = false, textForMonth: String = "", eventData: Any? = nil, recurringType: RecurringType = .none) {
+        self.ID = ID
+        self.text = text
+        self.start = start
+        self.end = end
+        self.color = color
+        self.backgroundColor = backgroundColor
+        self.textColor = textColor
+        self.isAllDay = isAllDay
+        self.isContainsFile = isContainsFile
+        self.textForMonth = textForMonth
+        self.eventData = eventData
+        self.recurringType = recurringType
+    }
 }
 
 extension Event {
@@ -91,9 +105,69 @@ extension Event {
     }
 }
 
+public enum RecurringType: Int {
+    case everyDay, everyWeek, everyMonth, everyYear, none
+}
+
 extension Event: EventProtocol {
     public func compare(_ event: Event) -> Bool {
         return hash == event.hash
+    }
+}
+
+extension Event {
+    func updateDate(newDate: Date?, calendar: Calendar = Calendar.current) -> Event? {
+        var startComponents = DateComponents()
+        startComponents.year = start.year
+        startComponents.month = start.month
+        startComponents.hour = start.hour
+        startComponents.minute = start.minute
+        
+        var endComponents = DateComponents()
+        endComponents.year = end.year
+        endComponents.month = end.month
+        endComponents.hour = end.hour
+        endComponents.minute = end.minute
+        
+        switch recurringType {
+        case .everyDay:
+            startComponents.day = newDate?.day
+        case .everyWeek where newDate?.weekday == start.weekday:
+            startComponents.day = newDate?.day
+            startComponents.weekday = newDate?.weekday
+            
+            endComponents.weekday = newDate?.weekday
+        case .everyMonth where newDate?.month != start.month && newDate?.day == start.day:
+            startComponents.day = newDate?.day
+            startComponents.month = newDate?.month
+            
+            endComponents.month = newDate?.month
+        case .everyYear where newDate?.year != start.year && newDate?.month == start.month && newDate?.day == start.day:
+            startComponents.day = newDate?.day
+            startComponents.month = newDate?.month
+            startComponents.year = newDate?.year
+            
+            endComponents.month = newDate?.month
+            endComponents.year = newDate?.year
+        default:
+            return nil
+        }
+        
+        let offsetDay = end.day - start.day
+        if start.day == end.day {
+            endComponents.day = newDate?.day
+        } else if let newDay = newDate?.day {
+            endComponents.day = newDay + offsetDay
+        } else {
+            endComponents.day = newDate?.day
+        }
+        
+        guard let newStart = calendar.date(from: startComponents), let newEnd = calendar.date(from: endComponents) else { return nil }
+        
+        var newEvent = self
+        newEvent.start = newStart
+        newEvent.end = newEnd
+        return newEvent
     }
 }
 
@@ -116,7 +190,7 @@ protocol CalendarPrivateDelegate: class {
     func didSelectCalendarDate(_ date: Date?, type: CalendarType, frame: CGRect?)
     func didSelectCalendarEvent(_ event: Event, frame: CGRect?)
     func didSelectCalendarMore(_ date: Date, frame: CGRect?)
-    func calendarEventViewerFrame(_ frame: CGRect)
+    func getEventViewerFrame(_ frame: CGRect)
     func didChangeCalendarEvent(_ event: Event, start: Date?, end: Date?)
     func didAddCalendarEvent(_ date: Date?)
 }

@@ -58,7 +58,7 @@ public final class CalendarView: UIView {
         self.yearData = YearData(date: date, years: years, style: style)
         self.dayData = DayData(yearData: yearData, timeSystem: style.timeHourSystem, startDay: style.startWeekDay)
         self.weekData = WeekData(yearData: yearData, timeSystem: style.timeHourSystem, startDay: style.startWeekDay)
-        self.monthData = MonthData(yearData: yearData, startDay: style.startWeekDay)
+        self.monthData = MonthData(yearData: yearData, startDay: style.startWeekDay, calendar: style.calendar)
         super.init(frame: frame)
         
         if let defaultType = style.defaultType {
@@ -112,21 +112,7 @@ public final class CalendarView: UIView {
             break
         }
     }
-    
-    @available(swift, obsoleted: 0.3.4, message: "This will be removed in v0.3.5, please migrate to a scrollTo(_:)", renamed: "scrollTo")
-    public func scrollToDate(date: Date) {
-        switch type {
-        case .day:
-            dayView.setDate(date)
-        case .week:
-            weekView.setDate(date)
-        case .month:
-            monthView.setDate(date)
-        case .year:
-            yearView.setDate(date)
-        }
-    }
-    
+
     public func scrollTo(_ date: Date) {
         switch type {
         case .day:
@@ -183,7 +169,7 @@ extension CalendarView: CalendarPrivateDelegate {
         delegate?.didChangeEvent(event, start: start, end: end)
     }
     
-    func calendarEventViewerFrame(_ frame: CGRect) {
+    func getEventViewerFrame(_ frame: CGRect) {
         var newFrame = frame
         newFrame.origin = .zero
         delegate?.eventViewerFrame(newFrame)
