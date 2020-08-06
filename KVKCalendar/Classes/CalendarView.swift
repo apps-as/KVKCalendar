@@ -179,10 +179,12 @@ extension CalendarView: CalendarPrivateDelegate {
 extension CalendarView: CalendarSettingProtocol {
     public func reloadFrame(_ frame: CGRect) {
         self.frame = frame
-        dayView.reloadFrame(frame)
-        weekView.reloadFrame(frame)
-        monthView.reloadFrame(frame)
-        yearView.reloadFrame(frame)
+        var childFrame = frame
+        childFrame.origin = CGPoint.zero
+        dayView.reloadFrame(childFrame)
+        weekView.reloadFrame(childFrame)
+        monthView.reloadFrame(childFrame)
+        yearView.reloadFrame(childFrame)
     }
     
     // TODO: in progress
