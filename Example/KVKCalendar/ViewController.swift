@@ -192,17 +192,10 @@ extension ViewController {
             let startTime = self.timeFormatter(date: startDate)
             let endTime = self.timeFormatter(date: endDate)
 
-            var newEndDate = endDate
-
-            let duration = endDate.timeIntervalSince(startDate)
-            if duration < 900 {
-                newEndDate += 900 - duration
-            }
-
             var event = Event()
             event.ID = item.id
             event.start = startDate
-            event.end = newEndDate
+            event.end = endDate
             event.color = EventColor(item.color)
             event.isAllDay = item.allDay
             event.isContainsFile = !item.files.isEmpty
