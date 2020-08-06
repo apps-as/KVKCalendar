@@ -67,6 +67,8 @@ public struct HeaderScrollStyle {
     public var colorWeekdayBackground: UIColor = .clear
     public var colorWeekendBackground: UIColor = .clear
     public var isHidden: Bool = false
+    public var fontTitle: UIFont = .systemFont(ofSize: 11)
+    public var fontDate: UIFont = .systemFont(ofSize: 18)
 }
 
 public struct TimelineStyle {

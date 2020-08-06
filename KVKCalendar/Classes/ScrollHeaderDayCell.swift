@@ -15,7 +15,7 @@ final class ScrollHeaderDayCell: UICollectionViewCell {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 11)
+        label.font = headerStyle.fontTitle
         label.textColor = headerStyle.colorNameDay
         return label
     }()
@@ -23,12 +23,12 @@ final class ScrollHeaderDayCell: UICollectionViewCell {
     private lazy var dateLabel: UILabel = {
         let label = UILabel()
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 18)
+        label.font = headerStyle.fontDate
         label.textColor = headerStyle.colorDate
         label.clipsToBounds = true
         return label
     }()
-    
+
     private var headerStyle = HeaderScrollStyle()
     
     var style = Style() {
@@ -109,6 +109,9 @@ final class ScrollHeaderDayCell: UICollectionViewCell {
     }
     
     private func populateCell(_ item: DayStyle) {
+        titleLabel.font = headerStyle.fontTitle
+        dateLabel.font = headerStyle.fontDate
+
         guard item.day.type == .saturday || item.day.type == .sunday else {
             populateDay(date: item.day.date, colorText: item.style?.textColor ?? headerStyle.colorDate, style: item.style)
             titleLabel.textColor = headerStyle.colorDate

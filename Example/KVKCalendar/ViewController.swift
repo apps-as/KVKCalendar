@@ -44,6 +44,8 @@ final class ViewController: UIViewController {
         style.startWeekDay = .monday
         style.timeHourSystem = .twelveHour
         style.event.isEnableMoveEvent = true
+        style.headerScroll.fontTitle = .systemFont(ofSize: 12)
+        style.headerScroll.fontDate = .systemFont(ofSize: 16)
         return style
     }()
     
