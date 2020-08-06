@@ -46,6 +46,9 @@ final class ViewController: UIViewController {
         style.event.isEnableMoveEvent = true
         style.headerScroll.fontTitle = .systemFont(ofSize: 12)
         style.headerScroll.fontDate = .systemFont(ofSize: 16)
+        style.timeline.horizontalLineDashPattern = [2, 4]
+        style.timeline.horizontalLineColor = .lightGray
+        style.timeline.verticalLineColor = .clear
         return style
     }()
     

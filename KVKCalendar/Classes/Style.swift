@@ -78,6 +78,9 @@ public struct TimelineStyle {
     public var startHour: Int = 0
     public var heightLine: CGFloat = 0.5
     public var widthLine: CGFloat = 0.5
+    public var horizontalLineDashPattern: [NSNumber]?
+    public var horizontalLineColor: UIColor = .gray
+    public var verticalLineColor: UIColor = .gray
     public var offsetLineLeft: CGFloat = 10
     public var offsetLineRight: CGFloat = 10
     public var backgroundColor: UIColor = .white

@@ -207,7 +207,11 @@ final class TimelineView: UIView, EventDateProtocol {
                                    width: frame.width - xLine,
                                    height: style.timeline.heightLine)
             let line = UIView(frame: lineFrame)
-            line.backgroundColor = .gray
+            if let dashPattern = style.timeline.horizontalLineDashPattern {
+                line.makeDashed(color: style.timeline.horizontalLineColor, pattern: dashPattern)
+            } else {
+                line.backgroundColor = style.timeline.horizontalLineColor
+            }
             line.tag = idx
             lines.append(line)
         }
@@ -218,7 +222,7 @@ final class TimelineView: UIView, EventDateProtocol {
         let frame = CGRect(x: pointX, y: 0, width: style.timeline.widthLine, height: (CGFloat(25) * (style.timeline.heightTime + style.timeline.offsetTimeY)) - 75)
         let line = UIView(frame: frame)
         line.tag = tagVerticalLine
-        line.backgroundColor = .systemGray
+        line.backgroundColor = style.timeline.verticalLineColor
         line.isHidden = !style.week.showVerticalDayDivider
         return line
     }
@@ -540,5 +544,23 @@ final class TimelineView: UIView, EventDateProtocol {
         setOffsetScrollView()
         scrollToCurrentTime(startHour)
         showCurrentLineHour()
+    }
+}
+
+extension UIView {
+    func makeDashed(color: UIColor, pattern: [NSNumber]) {
+        let yMid = self.bounds.midY
+        let xMax = self.bounds.maxX
+        let pointFrom = CGPoint(x: 0, y: yMid)
+        let pointTo = CGPoint(x: xMax, y: yMid)
+
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.strokeColor = color.cgColor
+        shapeLayer.lineWidth = self.frame.height
+        shapeLayer.lineDashPattern = pattern
+        let path = CGMutablePath()
+        path.addLines(between: [pointFrom, pointTo])
+        shapeLayer.path = path
+        layer.addSublayer(shapeLayer)
     }
 }
