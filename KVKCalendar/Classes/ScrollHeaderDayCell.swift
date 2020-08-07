@@ -9,8 +9,12 @@ import UIKit
 
 final class ScrollHeaderDayCell: UICollectionViewCell {
     
-    private let heightDate: CGFloat = 35
-    private let heightTitle: CGFloat = 25
+    private var heightDate: CGFloat {
+        Style.const.headerScrollDateHeight
+    }
+    private var heightTitle: CGFloat {
+        Style.const.headerScrollHeightTitle
+    }
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()

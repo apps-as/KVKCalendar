@@ -24,8 +24,15 @@ public struct Style {
     public var timeHourSystem: TimeHourSystem = .twentyFourHour
     public var startWeekDay: StartDayType = .monday
     public var followInSystemTheme: Bool = false
+
+    public static var const: Const = .init()
     
     public init() {}
+}
+
+public struct Const {
+    public var headerScrollDateHeight: CGFloat = 35
+    public var headerScrollHeightTitle: CGFloat = 25
 }
 
 public struct HeaderScrollStyle {

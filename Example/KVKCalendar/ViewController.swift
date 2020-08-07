@@ -49,6 +49,9 @@ final class ViewController: UIViewController {
         style.timeline.horizontalLineDashPattern = [2, 4]
         style.timeline.horizontalLineColor = .lightGray
         style.timeline.verticalLineColor = .clear
+
+        Style.const.headerScrollHeightTitle = 20
+        Style.const.headerScrollDateHeight = 30
         return style
     }()
     
