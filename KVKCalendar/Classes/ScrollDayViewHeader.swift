@@ -197,28 +197,33 @@ final class ScrollDayHeaderView: UIView {
 
 extension ScrollDayHeaderView: CalendarSettingProtocol {
     func reloadFrame(_ frame: CGRect) {
-        self.frame.size.width = frame.width - self.frame.origin.x
-        titleLabel.frame.size.width = self.frame.width
-        
-        collectionView.removeFromSuperview()
-        let newView = createCollectionView(frame: self.frame, isScrollEnabled: style.headerScroll.isScrollEnabled)
-        newView.frame.origin.x = 0
-        if !style.headerScroll.isHiddenTitleDate {
-            newView.frame.size.height = self.frame.height - style.headerScroll.heightTitleDate
+        let newWidth = frame.width - self.frame.origin.x
+        if newWidth != self.frame.width {
+            self.frame.size.width = newWidth
+            titleLabel.frame.size.width = self.frame.width
+
+            collectionView.removeFromSuperview()
+            let newView = createCollectionView(frame: self.frame, isScrollEnabled: style.headerScroll.isScrollEnabled)
+            newView.frame.origin.x = 0
+            if !style.headerScroll.isHiddenTitleDate {
+                newView.frame.size.height = self.frame.height - style.headerScroll.heightTitleDate
+            }
+            addSubview(newView)
+            collectionView = newView
         }
-        addSubview(newView)
-        
         guard let scrollDate = getScrollDate(date),
             let idx = days.firstIndex(where: { $0.date?.year == scrollDate.year
                 && $0.date?.month == scrollDate.month
                 && $0.date?.day == scrollDate.day }) else { return }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            newView.scrollToItem(at: IndexPath(row: idx, section: 0), at: .left, animated: false)
-            self.lastContentOffset = newView.contentOffset.x
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            guard let self = self else {
+                return
+            }
+            self.collectionView.scrollToItem(at: IndexPath(row: idx, section: 0), at: .left, animated: false)
+            self.lastContentOffset = self.collectionView.contentOffset.x
         }
-        newView.reloadData()
-        collectionView = newView
+        collectionView.reloadData()
     }
     
     func updateStyle(_ style: Style) {
