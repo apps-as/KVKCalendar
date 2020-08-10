@@ -100,6 +100,7 @@ final class DayView: UIView {
     func reloadData(events: [Event]) {
         data.events = events
         timelineView.create(dates: [data.date], events: events, selectedDate: data.date)
+        scrollHeaderDay.events = events
     }
 }
 

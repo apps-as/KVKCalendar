@@ -1,7 +1,7 @@
 {
     "data": [
         {
-            "all_day": 1,
+            "all_day": 0,
             "border_color": "#FFFFFF",
             "color": "#12c795",
             "end": "2018-12-10T09:00:00+03:00",

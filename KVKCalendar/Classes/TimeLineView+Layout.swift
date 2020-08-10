@@ -36,7 +36,7 @@ extension TimelineView {
     }
 }
 
-private extension Event {
+extension Event {
 
     private static let epsilon: TimeInterval = 10e-6
 
@@ -57,11 +57,14 @@ private extension Event {
     }
 
     func intersects(_ other: Event) -> Bool {
-        return other.contains(timestamp: from) || other.contains(timestamp: toAdjusted)
+        return other.contains(timestamp: from) ||
+            other.contains(timestamp: toAdjusted) ||
+            contains(timestamp: other.from) ||
+            contains(timestamp: other.toAdjusted)
     }
 }
 
-private extension Array where Element == Event {
+ extension Array where Element == Event {
 
     func intercetions(with item: Element) -> [Element] {
         return self.filter { item.intersects($0) }

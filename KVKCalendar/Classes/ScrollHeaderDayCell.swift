@@ -15,6 +15,9 @@ final class ScrollHeaderDayCell: UICollectionViewCell {
     private var heightTitle: CGFloat {
         Style.const.headerScrollHeightTitle
     }
+    private var sizeBadge: CGSize {
+        Style.const.headerScrollBadgeSize
+    }
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -31,6 +34,14 @@ final class ScrollHeaderDayCell: UICollectionViewCell {
         label.textColor = headerStyle.colorDate
         label.clipsToBounds = true
         return label
+    }()
+
+    private lazy var dateBadgeView: UIView = {
+        let view = UIView(frame: CGRect(origin: .zero, size: sizeBadge))
+        view.backgroundColor = .clear
+        view.layer.cornerRadius = sizeBadge.height / 2
+        view.isHidden = true
+        return view
     }()
 
     private var headerStyle = HeaderScrollStyle()
@@ -101,10 +112,16 @@ final class ScrollHeaderDayCell: UICollectionViewCell {
         dateFrame.origin.y = titleFrame.height
         dateFrame.origin.x = (frame.width / 2) - (dateFrame.width / 2)
         dateLabel.frame = dateFrame
-        
+
+        var badgeFrame = dateBadgeView.frame
+        badgeFrame.origin.x = dateFrame.midX - sizeBadge.width / 2
+        badgeFrame.origin.y = dateFrame.origin.y + dateFrame.height + Style.const.headerScrollBadgeMargin
+        dateBadgeView.frame = badgeFrame
+
         addSubview(titleLabel)
         addSubview(dateLabel)
-        
+        addSubview(dateBadgeView)
+
         dateLabel.layer.cornerRadius = dateLabel.frame.width / 2
     }
     
@@ -115,7 +132,7 @@ final class ScrollHeaderDayCell: UICollectionViewCell {
     private func populateCell(_ item: DayStyle) {
         titleLabel.font = headerStyle.fontTitle
         dateLabel.font = headerStyle.fontDate
-
+        updateBagde(for: item)
         guard item.day.type == .saturday || item.day.type == .sunday else {
             populateDay(date: item.day.date, colorText: item.style?.textColor ?? headerStyle.colorDate, style: item.style)
             titleLabel.textColor = headerStyle.colorDate
@@ -136,6 +153,20 @@ final class ScrollHeaderDayCell: UICollectionViewCell {
         } else {
             dateLabel.textColor = colorText
             dateLabel.backgroundColor = style?.backgroundColor ?? .clear
+        }
+    }
+
+    private func updateBagde(for item: DayStyle) {
+        dateBadgeView.backgroundColor = headerStyle.colorBadge
+        let hasEvents = !item.day.events.isEmpty
+        switch headerStyle.badgeDisplayBehaviour {
+        case .all where hasEvents:
+            dateBadgeView.isHidden = false
+        case .notSelected where hasEvents:
+            let isSelected = item.day.date?.isOnSameDay(as: selectDate) ?? false
+            dateBadgeView.isHidden = isSelected
+        default:
+            dateBadgeView.isHidden = true
         }
     }
 }

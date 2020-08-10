@@ -33,9 +33,14 @@ public struct Style {
 public struct Const {
     public var headerScrollDateHeight: CGFloat = 35
     public var headerScrollHeightTitle: CGFloat = 25
+    public var headerScrollBadgeSize: CGSize = .init(width: 4, height: 4)
+    public var headerScrollBadgeMargin: CGFloat = 2
 }
 
 public struct HeaderScrollStyle {
+    public enum BadgeDisplayBehaviour {
+        case never, notSelected, all
+    }
     private let formatFull: DateFormatter = {
         let format = DateFormatter()
         format.dateStyle = .full
@@ -76,6 +81,8 @@ public struct HeaderScrollStyle {
     public var isHidden: Bool = false
     public var fontTitle: UIFont = .systemFont(ofSize: 11)
     public var fontDate: UIFont = .systemFont(ofSize: 18)
+    public var badgeDisplayBehaviour: BadgeDisplayBehaviour = .never
+    public var colorBadge: UIColor = .red
 }
 
 public struct TimelineStyle {

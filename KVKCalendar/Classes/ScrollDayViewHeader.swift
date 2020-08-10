@@ -21,6 +21,12 @@ final class ScrollDayHeaderView: UIView {
     private var lastContentOffset: CGFloat = 0
     
     weak var dataSource: DisplayDataSource?
+
+    var events: [Event] = .init() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
@@ -317,8 +323,28 @@ extension ScrollDayHeaderView: DayStyleProtocol {
     typealias Model = DayStyle
     
     func styleForDay(_ day: Day) -> DayStyle {
-        guard let item = dataSource?.willDisplayDate(day.date, events: day.events) else { return DayStyle(day, nil) }
-        
-        return DayStyle(day, item)
+        var newDay = day
+        if let date = day.date {
+            newDay.events = self.events.getEvents(forDay: date)
+        }
+        guard let item = dataSource?.willDisplayDate(newDay.date, events: newDay.events) else { return DayStyle(newDay, nil) }
+        return DayStyle(newDay, item)
+    }
+}
+
+private extension Array where Element == Event {
+    func getEvents(forDay date: Date) -> [Event] {
+        let dayStart = date.startOfDay ?? date
+        let dayEnd = date.endOfDay ?? date
+        let dayEvent = Event(ID: "", text: "", start: dayStart, end: dayEnd, color: nil, backgroundColor: .clear, textColor: .clear, isAllDay: false, isContainsFile: false, textForMonth: "", eventData: nil, recurringType: .none)
+        return filter {
+            $0.intersects(dayEvent)
+        }
+    }
+}
+
+extension Date {
+    func isOnSameDay(as other: Date) -> Bool {
+        return year == other.year && month == other.month && day == other.day
     }
 }
