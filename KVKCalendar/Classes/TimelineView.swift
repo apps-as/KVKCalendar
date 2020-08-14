@@ -536,7 +536,7 @@ final class TimelineView: UIView, EventDateProtocol {
                         page = EventView(event: event, style: style, frame: newFrame)
                     }
 
-                    if let shadowView = createShadowView(with: style, frame: newFrame) {
+                    if let shadowView = createShadowView(with: style, event: event, frame: newFrame) {
                         scrollView.addSubview(shadowView)
                     }
                     page.delegate = self
@@ -580,8 +580,8 @@ private extension TimelineView {
         }
     }
 
-    func createShadowView(with style: Style, frame: CGRect) -> UIView? {
-        guard style.timeline.eventShadowColor != .clear, style.timeline.eventShadowOpacity > 0 else {
+    func createShadowView(with style: Style, event: Event, frame: CGRect) -> UIView? {
+        guard event.hasShadow, style.timeline.eventShadowColor != .clear, style.timeline.eventShadowOpacity > 0 else {
             return nil
         }
         return ShadowView(frame: frame, style: style)

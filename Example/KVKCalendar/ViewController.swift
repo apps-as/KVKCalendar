@@ -210,6 +210,7 @@ extension ViewController {
             event.isAllDay = item.allDay
             event.isContainsFile = !item.files.isEmpty
             event.textForMonth = item.title
+            event.hasShadow = true
             
             if item.allDay {
                 event.text = "\(item.title)"
