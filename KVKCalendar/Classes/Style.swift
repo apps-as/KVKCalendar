@@ -117,6 +117,12 @@ public struct TimelineStyle {
     public var shadowColumnAlpha: CGFloat = 0.1
     public var eventCorners: UIRectCorner = .allCorners
     public var eventCornersRadius: CGSize = CGSize(width: 5, height: 5)
+
+    public var eventShadowColor: UIColor = .gray
+    public var eventShadowOpacity: Float = 0
+    public var eventShadowOffset: CGSize = .zero
+    public var eventShadowRadius: CGFloat = 5
+
 }
 
 public struct WeekStyle {

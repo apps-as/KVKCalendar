@@ -49,6 +49,7 @@ final class ViewController: UIViewController {
         style.timeline.horizontalLineDashPattern = [2, 4]
         style.timeline.horizontalLineColor = .lightGray
         style.timeline.verticalLineColor = .clear
+        style.timeline.eventShadowOpacity = 0.66
         style.headerScroll.badgeDisplayBehaviour = .notSelected
         style.headerScroll.colorBadge = .black
         Style.const.headerScrollHeightTitle = 20
@@ -182,8 +183,8 @@ extension ViewController: CalendarDataSource {
     
     func willDisplayEventView(_ event: Event, frame: CGRect, date: Date?) -> EventViewGeneral? {
 //        guard event.ID == "2" else { return nil }
-        
-        return CustomViewEvent(style: style, event: event, frame: frame)
+        let view = CustomViewEvent(style: style, event: event, frame: frame)
+        return view
     }
 }
 
@@ -310,7 +311,7 @@ final class CustomViewEvent: EventViewGeneral {
         let imageView = UIImageView(image: UIImage(named: "ic_stub"))
         imageView.contentMode = .scaleAspectFit
         addSubview(imageView)
-        backgroundColor = event.backgroundColor
+        backgroundColor = event.backgroundColor.withAlphaComponent(1)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             imageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),

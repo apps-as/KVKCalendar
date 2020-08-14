@@ -125,8 +125,9 @@ final class TimelineView: UIView, EventDateProtocol {
             eventsAllDay = scrollView.subviews.filter({ $0 is AllDayEventView })
             eventsAllDay += scrollView.subviews.filter({ $0 is AllDayTitleView })
         }
-        
-        let eventViews = events + eventsAllDay
+
+        let shadowViews = scrollView.subviews.filter { $0 is ShadowView}
+        let views = events + eventsAllDay + shadowViews
         
         switch gesture.state {
         case .began, .changed:
@@ -134,7 +135,7 @@ final class TimelineView: UIView, EventDateProtocol {
             guard endGesure else {
                 delegate?.swipeX(transform: CGAffineTransform(translationX: translation.x, y: 0), stop: false)
                 
-                eventViews.forEach { (view) in
+                views.forEach { (view) in
                     view.transform = CGAffineTransform(translationX: translation.x, y: 0)
                 }
                 break
@@ -143,11 +144,11 @@ final class TimelineView: UIView, EventDateProtocol {
             gesture.state = .ended
         case .failed:
             delegate?.swipeX(transform: .identity, stop: false)
-            identityViews(eventViews)
+            identityViews(views)
         case .cancelled, .ended:
             guard endGesure else {
                 delegate?.swipeX(transform: .identity, stop: false)
-                identityViews(eventViews)
+                identityViews(views)
                 break
             }
             
@@ -157,7 +158,7 @@ final class TimelineView: UIView, EventDateProtocol {
             UIView.animate(withDuration: 0.2, animations: { [weak delegate = self.delegate] in
                 delegate?.swipeX(transform: CGAffineTransform(translationX: translationX * 0.8, y: 0), stop: true)
                 
-                eventViews.forEach { (view) in
+                views.forEach { (view) in
                     view.transform = CGAffineTransform(translationX: translationX, y: 0)
                 }
             }) { [weak delegate = self.delegate] (_) in
@@ -534,9 +535,14 @@ final class TimelineView: UIView, EventDateProtocol {
                     } else {
                         page = EventView(event: event, style: style, frame: newFrame)
                     }
+
+                    if let shadowView = createShadowView(with: style, frame: newFrame) {
+                        scrollView.addSubview(shadowView)
+                    }
                     page.delegate = self
                     page.dataSource = self
                     scrollView.addSubview(page)
+
                     pagesCached.append(page)
                 }
             }
@@ -544,6 +550,41 @@ final class TimelineView: UIView, EventDateProtocol {
         setOffsetScrollView()
         scrollToCurrentTime(startHour)
         showCurrentLineHour()
+    }
+}
+
+private extension TimelineView {
+
+    class ShadowView: UIView {
+        init(frame: CGRect, style: Style) {
+            super.init(frame: frame)
+            setup(with: style)
+        }
+
+        override init(frame: CGRect) {
+            fatalError("Not supported")
+        }
+
+        required init?(coder: NSCoder) {
+            fatalError("Not supported")
+        }
+
+        private func setup(with style: Style) {
+            backgroundColor = .clear
+            layer.shadowOpacity = style.timeline.eventShadowOpacity
+            layer.shadowColor = style.timeline.eventShadowColor.cgColor
+            layer.shadowOffset = style.timeline.eventShadowOffset
+            layer.shadowRadius = style.timeline.eventShadowRadius
+            layer.shadowPath = UIBezierPath(roundedRect: CGRect(origin: .zero, size: frame.size), cornerRadius: style.timeline.eventCornersRadius.width).cgPath
+            layer.masksToBounds = false
+        }
+    }
+
+    func createShadowView(with style: Style, frame: CGRect) -> UIView? {
+        guard style.timeline.eventShadowColor != .clear, style.timeline.eventShadowOpacity > 0 else {
+            return nil
+        }
+        return ShadowView(frame: frame, style: style)
     }
 }
 
