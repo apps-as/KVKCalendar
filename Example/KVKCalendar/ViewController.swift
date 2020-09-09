@@ -39,7 +39,7 @@ final class ViewController: UIViewController {
         style.timeline.offsetEvent = 0.5
         style.timeline.currentLineHourWidth = 40
         style.timeline.heightTime = 50
-        style.timeline.autocrollBehaviour = .firstEvent
+        style.timeline.autoScrollBehaviour = .firstEvent
         style.allDay.isPinned = true
         style.startWeekDay = .monday
         style.timeHourSystem = .twelveHour

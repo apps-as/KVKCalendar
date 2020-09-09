@@ -385,7 +385,7 @@ final class TimelineView: UIView, EventDateProtocol {
     private func performAutoScroll() {
         guard !firstAutoScrollIsCompleted else { return }
 
-        switch style.timeline.autocrollBehaviour {
+        switch style.timeline.autoScrollBehaviour {
         case .currentTime:
             scrollToCurrentTime()
         case .firstEvent:
