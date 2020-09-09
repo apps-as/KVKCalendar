@@ -34,12 +34,12 @@ final class ViewController: UIViewController {
         } else {
             style.timeline.widthEventViewer = 500
         }
-        style.timeline.startFromFirstEvent = false
         style.followInSystemTheme = true
         style.timeline.offsetTimeY = 50
         style.timeline.offsetEvent = 0.5
         style.timeline.currentLineHourWidth = 40
         style.timeline.heightTime = 50
+        style.timeline.autocrollBehaviour = .firstEvent
         style.allDay.isPinned = true
         style.startWeekDay = .monday
         style.timeHourSystem = .twelveHour

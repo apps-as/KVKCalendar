@@ -93,6 +93,12 @@ public struct TimelineStyle {
         case longTap
     }
 
+    public enum AutoScrollBehaviour {
+        case none
+        case currentTime
+        case firstEvent
+    }
+
     public var startFromFirstEvent: Bool = true
     public var eventFont: UIFont = .boldSystemFont(ofSize: 12)
     public var offsetEvent: CGFloat = 1
@@ -111,7 +117,7 @@ public struct TimelineStyle {
     public var offsetTimeY: CGFloat = 50
     public var timeColor: UIColor = .systemGray
     public var timeFont: UIFont = .systemFont(ofSize: 12)
-    public var scrollToCurrentHour: Bool = true
+    public var autocrollBehaviour: AutoScrollBehaviour = .currentTime
     public var widthEventViewer: CGFloat = 0
     public var iconFile: UIImage? = nil
     public var colorIconFile: UIColor = .black

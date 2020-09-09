@@ -381,23 +381,41 @@ final class TimelineView: UIView, EventDateProtocol {
             action()
         }, completion: nil)
     }
-    
-    private func scrollToCurrentTime(_ startHour: Int) {
-        guard style.timeline.scrollToCurrentHour else { return }
-        
+
+    private func performAutoScroll() {
+        guard !firstAutoScrollIsCompleted else { return }
+
+        switch style.timeline.autocrollBehaviour {
+        case .currentTime:
+            scrollToCurrentTime()
+        case .firstEvent:
+            scrollToFirstEvent()
+        default:
+            return
+        }
+        firstAutoScrollIsCompleted = true
+    }
+
+    private func scrollToCurrentTime() {
         guard let time = getTimelineLabel(hour: Date().hour)else {
             scrollView.setContentOffset(.zero, animated: true)
             return
         }
-        
-        guard !firstAutoScrollIsCompleted else { return }
-        
         var frame = scrollView.frame
         frame.origin.y = time.frame.origin.y
         scrollView.scrollRectToVisible(frame, animated: true)
-        firstAutoScrollIsCompleted = true
     }
-    
+
+    private func scrollToFirstEvent() {
+        guard let firstEvent = eventViews.first else {
+            return
+        }
+        let offset = (style.timeline.offsetTimeY)
+        var frame = scrollView.frame
+        frame.origin.y = firstEvent.frame.origin.y - offset
+        scrollView.scrollRectToVisible(frame, animated: true)
+    }
+
     private func fillBackgroundDayColor(_ color: UIColor, pointX: CGFloat, width: CGFloat) -> UIView {
         let view = UIView(frame: CGRect(x: pointX, y: 0.0, width: width, height: (CGFloat(25) * (style.timeline.heightTime + style.timeline.offsetTimeY)) - 75))
         view.backgroundColor = color
@@ -557,7 +575,7 @@ final class TimelineView: UIView, EventDateProtocol {
             }
         }
         setOffsetScrollView()
-        scrollToCurrentTime(startHour)
+        performAutoScroll()
         showCurrentLineHour()
     }
 }
@@ -612,5 +630,19 @@ extension UIView {
         path.addLines(between: [pointFrom, pointTo])
         shapeLayer.path = path
         layer.addSublayer(shapeLayer)
+    }
+}
+
+extension TimelineView {
+
+    var eventViews: [EventViewGeneral] {
+        return scrollView.subviews.compactMap{ $0 as? EventViewGeneral }
+    }
+    var allDayViews: [AllDayEventView] {
+        if style.allDay.isPinned {
+            return subviews.compactMap { $0 as? AllDayEventView }
+        } else {
+            return scrollView.subviews.compactMap { $0 as? AllDayEventView }
+        }
     }
 }
