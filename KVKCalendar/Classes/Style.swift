@@ -86,6 +86,13 @@ public struct HeaderScrollStyle {
 }
 
 public struct TimelineStyle {
+
+    public enum AddEventGesture {
+        case none
+        case tap
+        case longTap
+    }
+
     public var startFromFirstEvent: Bool = true
     public var eventFont: UIFont = .boldSystemFont(ofSize: 12)
     public var offsetEvent: CGFloat = 1
@@ -123,6 +130,7 @@ public struct TimelineStyle {
     public var eventShadowOffset: CGSize = .zero
     public var eventShadowRadius: CGFloat = 5
 
+    public var addEventGesture: AddEventGesture = .tap
 }
 
 public struct WeekStyle {

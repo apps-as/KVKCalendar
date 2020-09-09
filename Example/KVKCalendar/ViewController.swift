@@ -50,6 +50,7 @@ final class ViewController: UIViewController {
         style.timeline.horizontalLineColor = .lightGray
         style.timeline.verticalLineColor = .clear
         style.timeline.eventShadowOpacity = 0.66
+        style.timeline.addEventGesture = .longTap
         style.headerScroll.badgeDisplayBehaviour = .notSelected
         style.headerScroll.colorBadge = .black
         Style.const.headerScrollHeightTitle = 20
@@ -163,6 +164,13 @@ extension ViewController: CalendarDelegate {
     
     func eventViewerFrame(_ frame: CGRect) {
         eventViewer.reloadFrame(frame: frame)
+    }
+
+    func didAddEvent(_ date: Date?) {
+        guard let date = date else {
+            return
+        }
+        debugPrint("didAddEvent: \(date)")
     }
 }
 

@@ -90,9 +90,18 @@ final class TimelineView: UIView, EventDateProtocol {
         
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(swipeEvent))
         addGestureRecognizer(panGesture)
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(addEvent))
-        addGestureRecognizer(tapGesture)
+
+        switch style.timeline.addEventGesture {
+        case .tap:
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(addEvent))
+            addGestureRecognizer(tapGesture)
+        case .longTap:
+            let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(addEvent))
+            longGesture.minimumPressDuration = 1.0
+            addGestureRecognizer(longGesture)
+        default:
+            break
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
