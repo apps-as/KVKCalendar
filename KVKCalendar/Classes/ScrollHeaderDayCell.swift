@@ -160,13 +160,12 @@ final class ScrollHeaderDayCell: UICollectionViewCell {
 
     private func updateBagde(for item: DayStyle) {
         dateBadgeView.backgroundColor = headerStyle.colorBadge
-        let hasEvents = !item.day.events.isEmpty
+        let hasBadgedEvents = !item.day.events.filter { $0.hasBadge }.isEmpty
         let isSelected = item.day.date?.isOnSameDay(as: selectDate) ?? false
         switch headerStyle.badgeDisplayBehaviour {
-        case .all where hasEvents:
+        case .all where hasBadgedEvents:
             dateBadgeView.isHidden = false
-        case .notSelected where hasEvents:
-
+        case .notSelected where hasBadgedEvents:
             dateBadgeView.isHidden = isSelected
         default:
             dateBadgeView.isHidden = true

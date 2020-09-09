@@ -83,8 +83,9 @@ public struct Event {
     public var eventData: Any?
     public var recurringType: RecurringType
     public var hasShadow: Bool
+    public var hasBadge: Bool
     
-    public init(ID: String = "0", text: String = "", start: Date = Date(), end: Date = Date(), color: EventColor? = nil, backgroundColor: UIColor = UIColor.systemBlue.withAlphaComponent(0.3), textColor: UIColor = .black, isAllDay: Bool = false, isContainsFile: Bool = false, textForMonth: String = "", eventData: Any? = nil, recurringType: RecurringType = .none, hasShadow: Bool = false) {
+    public init(ID: String = "0", text: String = "", start: Date = Date(), end: Date = Date(), color: EventColor? = nil, backgroundColor: UIColor = UIColor.systemBlue.withAlphaComponent(0.3), textColor: UIColor = .black, isAllDay: Bool = false, isContainsFile: Bool = false, textForMonth: String = "", eventData: Any? = nil, recurringType: RecurringType = .none, hasShadow: Bool = false, hasBadge: Bool = true) {
         self.ID = ID
         self.text = text
         self.start = start
@@ -98,6 +99,7 @@ public struct Event {
         self.eventData = eventData
         self.recurringType = recurringType
         self.hasShadow = hasShadow
+        self.hasBadge = hasBadge
     }
 }
 
