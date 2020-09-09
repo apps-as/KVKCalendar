@@ -13,7 +13,8 @@ final class TimelineView: UIView, EventDateProtocol {
     weak var dataSource: DisplayDataSource?
     var style: Style
     var eventPreview: UIView?
-    var firstAutoScrollIsCompleted = false
+    var autoScrolledToCurrentTime = false
+    var autoScrolledToFirstEvent = false
     var eventPreviewSize = CGSize(width: 100, height: 100)
     
     private(set) var tagCurrentHourLine = -10
@@ -383,8 +384,6 @@ final class TimelineView: UIView, EventDateProtocol {
     }
 
     private func performAutoScroll() {
-        guard !firstAutoScrollIsCompleted else { return }
-
         switch style.timeline.autoScrollBehaviour {
         case .currentTime:
             scrollToCurrentTime()
@@ -397,10 +396,12 @@ final class TimelineView: UIView, EventDateProtocol {
         default:
             return
         }
-        firstAutoScrollIsCompleted = true
     }
 
     private func scrollToCurrentTime() {
+        guard !autoScrolledToCurrentTime else {
+            return
+        }
         guard let time = getTimelineLabel(hour: Date().hour)else {
             scrollView.setContentOffset(.zero, animated: true)
             return
@@ -408,16 +409,18 @@ final class TimelineView: UIView, EventDateProtocol {
         var frame = scrollView.frame
         frame.origin.y = time.frame.origin.y
         scrollView.scrollRectToVisible(frame, animated: true)
+        autoScrolledToCurrentTime = true
     }
 
     private func scrollToFirstEvent() -> Bool {
-        guard let firstEvent = eventViews.first else {
+        guard !autoScrolledToFirstEvent, let firstEvent = eventViews.first else {
             return false
         }
         let offset = (style.timeline.offsetTimeY)
         var frame = scrollView.frame
         frame.origin.y = firstEvent.frame.origin.y - offset
         scrollView.scrollRectToVisible(frame, animated: true)
+        autoScrolledToFirstEvent = true
         return true
     }
 

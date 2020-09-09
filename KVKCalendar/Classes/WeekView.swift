@@ -75,7 +75,8 @@ final class WeekView: UIView {
     }
     
     func setDate(_ date: Date) {
-        timelineView.firstAutoScrollIsCompleted = false
+        timelineView.autoScrolledToFirstEvent = false
+        timelineView.autoScrolledToCurrentTime = false
         data.date = date
         scrollHeaderDay.setDate(date)
     }

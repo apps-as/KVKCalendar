@@ -39,7 +39,7 @@ final class ViewController: UIViewController {
         style.timeline.offsetEvent = 0.5
         style.timeline.currentLineHourWidth = 40
         style.timeline.heightTime = 50
-        style.timeline.autoScrollBehaviour = .firstEvent
+        style.timeline.autoScrollBehaviour = .firstEventThenCurrentTime
         style.allDay.isPinned = true
         style.startWeekDay = .monday
         style.timeHourSystem = .twelveHour
@@ -230,9 +230,9 @@ extension ViewController {
             if item.id == "14" {
                 event.recurringType = .everyWeek
             }
-            if item.id == "40" {
-                event.recurringType = .everyDay
-            }
+//            if item.id == "40" {
+//                event.recurringType = .everyDay
+//            }
             return event
         })
         completion(events)

@@ -119,7 +119,8 @@ extension DayView {
     func didSelectDateScrollHeader(_ date: Date?, type: CalendarType) {
         guard let selectDate = date else { return }
         
-        timelineView.firstAutoScrollIsCompleted = false
+        timelineView.autoScrolledToCurrentTime = false
+        timelineView.autoScrolledToFirstEvent = false
         data.date = selectDate
         delegate?.didSelectCalendarDate(selectDate, type: type, frame: nil)
     }
