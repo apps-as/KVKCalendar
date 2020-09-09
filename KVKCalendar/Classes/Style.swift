@@ -131,6 +131,7 @@ public struct TimelineStyle {
     public var eventShadowRadius: CGFloat = 5
 
     public var addEventGesture: AddEventGesture = .tap
+    public var minimumPressDuration: TimeInterval = 1.0
 }
 
 public struct WeekStyle {

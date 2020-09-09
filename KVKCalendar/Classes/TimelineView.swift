@@ -97,7 +97,7 @@ final class TimelineView: UIView, EventDateProtocol {
             addGestureRecognizer(tapGesture)
         case .longTap:
             let longGesture = UILongPressGestureRecognizer(target: self, action: #selector(addEvent))
-            longGesture.minimumPressDuration = 1.0
+            longGesture.minimumPressDuration = style.timeline.minimumPressDuration
             addGestureRecognizer(longGesture)
         default:
             break

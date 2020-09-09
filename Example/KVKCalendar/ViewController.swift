@@ -51,6 +51,7 @@ final class ViewController: UIViewController {
         style.timeline.verticalLineColor = .clear
         style.timeline.eventShadowOpacity = 0.66
         style.timeline.addEventGesture = .longTap
+        style.timeline.minimumPressDuration = 2.0
         style.headerScroll.badgeDisplayBehaviour = .notSelected
         style.headerScroll.colorBadge = .black
         Style.const.headerScrollHeightTitle = 20
