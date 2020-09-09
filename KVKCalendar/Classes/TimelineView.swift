@@ -389,7 +389,11 @@ final class TimelineView: UIView, EventDateProtocol {
         case .currentTime:
             scrollToCurrentTime()
         case .firstEvent:
-            scrollToFirstEvent()
+            _ = scrollToFirstEvent()
+        case .firstEventThenCurrentTime:
+            if !scrollToFirstEvent() {
+                scrollToCurrentTime()
+            }
         default:
             return
         }
@@ -406,14 +410,15 @@ final class TimelineView: UIView, EventDateProtocol {
         scrollView.scrollRectToVisible(frame, animated: true)
     }
 
-    private func scrollToFirstEvent() {
+    private func scrollToFirstEvent() -> Bool {
         guard let firstEvent = eventViews.first else {
-            return
+            return false
         }
         let offset = (style.timeline.offsetTimeY)
         var frame = scrollView.frame
         frame.origin.y = firstEvent.frame.origin.y - offset
         scrollView.scrollRectToVisible(frame, animated: true)
+        return true
     }
 
     private func fillBackgroundDayColor(_ color: UIColor, pointX: CGFloat, width: CGFloat) -> UIView {

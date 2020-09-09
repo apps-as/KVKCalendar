@@ -97,6 +97,7 @@ public struct TimelineStyle {
         case none
         case currentTime
         case firstEvent
+        case firstEventThenCurrentTime
     }
 
     public var startFromFirstEvent: Bool = true
