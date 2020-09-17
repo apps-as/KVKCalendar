@@ -83,6 +83,7 @@ public struct HeaderScrollStyle {
     public var fontDate: UIFont = .systemFont(ofSize: 18)
     public var badgeDisplayBehaviour: BadgeDisplayBehaviour = .never
     public var colorBadge: UIColor = .red
+    public var colorBadgeSelected: UIColor = .red
 }
 
 public struct TimelineStyle {
