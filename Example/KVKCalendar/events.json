@@ -439,6 +439,17 @@
             "text_color": "#000000",
             "title": "Event number 35",
             "files": []
+        },
+        {
+            "all_day": 0,
+            "id": "33x",
+            "border_color": "#00ff00",
+            "color": "#30ff30",
+            "end": "2018-12-22T23:15:00+00:00",
+            "start": "2018-12-22T22:00:00+00:00",
+            "text_color": "#000000",
+            "title": "Event number XXX",
+            "files": []
         }
     ]
 }

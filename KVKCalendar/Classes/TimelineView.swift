@@ -201,7 +201,10 @@ final class TimelineView: UIView, EventDateProtocol {
             time.text = hour
             let formatter = DateFormatter()
             formatter.dateFormat = "HH:mm"
-            let hourTmp = TimeHourSystem.twentyFourHour.hours[idx]
+            var hourTmp = TimeHourSystem.twentyFourHour.hours[idx]
+            if idx == TimeHourSystem.twentyFourHour.hours.count - 1 {
+                hourTmp += "+1d"
+            }
             time.valueHash = formatter.date(from: hourTmp)?.hour.hashValue
             time.tag = idx - start
             times.append(time)

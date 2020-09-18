@@ -191,7 +191,7 @@ extension ViewController: CalendarDataSource {
     }
     
     func willDisplayEventView(_ event: Event, frame: CGRect, date: Date?) -> EventViewGeneral? {
-//        guard event.ID == "2" else { return nil }
+        guard event.ID == "2" else { return nil }
         let view = CustomViewEvent(style: style, event: event, frame: frame)
         return view
     }
