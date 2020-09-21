@@ -34,6 +34,7 @@ final class ViewController: UIViewController {
         } else {
             style.timeline.widthEventViewer = 500
         }
+        style.timeline.startFromFirstEvent = false
         style.followInSystemTheme = true
         style.timeline.offsetTimeY = 50
         style.timeline.offsetEvent = 0.5
@@ -101,6 +102,11 @@ final class ViewController: UIViewController {
             }
         }
     }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        calendarView.reloadData()
+    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -157,6 +163,8 @@ extension ViewController: CalendarDelegate {
         default:
             break
         }
+        let eventView = ViewController()
+        navigationController?.pushViewController(eventView, animated: true)
     }
     
     func didSelectMore(_ date: Date, frame: CGRect?) {

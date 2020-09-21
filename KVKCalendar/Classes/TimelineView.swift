@@ -402,7 +402,7 @@ final class TimelineView: UIView, EventDateProtocol {
     }
 
     private func scrollToCurrentTime() {
-        guard !autoScrolledToCurrentTime else {
+        guard !autoScrolledToCurrentTime, !autoScrolledToFirstEvent else {
             return
         }
         guard let time = getTimelineLabel(hour: Date().hour)else {
