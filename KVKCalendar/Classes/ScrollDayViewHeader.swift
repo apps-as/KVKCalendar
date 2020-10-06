@@ -132,8 +132,8 @@ final class ScrollDayHeaderView: UIView {
         
         switch type {
         case .day:
-            let minOffset = 4
-            let maxOffset = 5
+            let minOffset = 0
+            let maxOffset = 0
             guard middleDate.day - date.day >= minOffset || date.day - middleDate.day >= minOffset else {
                 guard let scrollDate = getScrollDate(date),
                     let idx = days.firstIndex(where: { $0.date?.year == scrollDate.year
