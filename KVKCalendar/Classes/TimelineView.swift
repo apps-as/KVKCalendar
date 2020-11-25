@@ -47,7 +47,7 @@ final class TimelineView: UIView, EventDateProtocol {
         label.textAlignment = .center
         label.font = style.timeline.currentLineHourFont
         label.adjustsFontSizeToFitWidth = true
-        
+        label.backgroundColor = UIColor.white.withAlphaComponent(0.8)
         let formatter = DateFormatter()
         formatter.dateFormat = timeHourSystem.format
         label.text = formatter.string(from: Date())
@@ -314,11 +314,6 @@ final class TimelineView: UIView, EventDateProtocol {
             let formatter = DateFormatter()
             formatter.dateFormat = self.timeHourSystem.format
             self.currentTimeLabel.text = formatter.string(from: nextDate)
-            
-            if let timeNext = self.getTimelineLabel(hour: nextDate.hour + 1) {
-                timeNext.isHidden = self.currentTimeLabel.frame.intersects(timeNext.frame)
-            }
-            time.isHidden = time.frame.intersects(self.currentTimeLabel.frame)
         }
         
         guard let timer = timer else { return }
@@ -364,11 +359,6 @@ final class TimelineView: UIView, EventDateProtocol {
         scrollView.addSubview(currentTimeLabel)
         scrollView.addSubview(currentLineView)
         movingCurrentLineHour()
-        
-        if let timeNext = getTimelineLabel(hour: date.hour + 1) {
-            timeNext.isHidden = currentTimeLabel.frame.intersects(timeNext.frame)
-        }
-        time.isHidden = currentTimeLabel.frame.intersects(time.frame)
     }
     
     private func calculatePointYByMinute(_ minute: Int, time: TimelineLabel) -> CGFloat {
