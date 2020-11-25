@@ -327,7 +327,18 @@ final class TimelineView: UIView, EventDateProtocol {
     
     private func showCurrentLineHour() {
         let date = Date()
-        guard style.timeline.showCurrentLineHour, let time = getTimelineLabel(hour: date.hour) else {
+        let show: Bool = {
+            switch style.timeline.currentLineHourDisplayBehaviour {
+            case .showForCurrentDay:
+                return selectedDate?.isOnSameDay(as: date) ?? false
+            case .showAlways:
+                return true
+            default:
+                return false
+            }
+        }()
+
+        guard show, let time = getTimelineLabel(hour: date.hour) else {
             currentLineView.removeFromSuperview()
             currentTimeLabel.removeFromSuperview()
             timer?.invalidate()

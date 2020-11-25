@@ -14,8 +14,8 @@ final class ViewController: UIViewController {
     
     private var selectDate: Date = {
         let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        return formatter.date(from: "13.12.2018") ?? Date()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        return formatter.date(from: "2020-10-06 02:00") ?? Date()
     }()
     
     private lazy var todayButton: UIBarButtonItem = {
@@ -53,6 +53,7 @@ final class ViewController: UIViewController {
         style.timeline.eventShadowOpacity = 0.66
         style.timeline.addEventGesture = .longTap
         style.timeline.minimumPressDuration = 2.0
+        style.timeline.currentLineHourDisplayBehaviour = .showForCurrentDay
         style.headerScroll.badgeDisplayBehaviour = .all
         style.headerScroll.colorBadge = .black
         Style.const.headerScrollHeightTitle = 20
@@ -96,9 +97,13 @@ final class ViewController: UIViewController {
         calendarView.addEventViewToDay(view: eventViewer)
         
         loadEvents { [weak self] (events) in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 self?.events = events
                 self?.calendarView.reloadData()
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd HH:mm"
+                let date = formatter.date(from: "2020-05-04 02:00") ?? Date()
+                self?.calendarView.set(type: .day, date: date)
             }
         }
     }
