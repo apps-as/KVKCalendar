@@ -2,7 +2,7 @@
 
 [KVKCalendar](https://github.com/kvyatkovskys)
 
-It contains bug fixes and improvement. Some improvements are specific to Apps needs and only made for certail views, hence it's kept as a fork.
+It contains bug fixes and improvement. Some improvements are specific to Apps needs and only made for certain views, hence it's kept as a fork.
 
 
 ## License
