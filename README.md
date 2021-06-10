@@ -1,8 +1,8 @@
 ## This repo is the fork of KVKCalendar
-[Sergei Kviatkovskii](https://github.com/kvyatkovskys)
+
+[KVKCalendar] (https://github.com/kvyatkovskys)
 
 It contains bug fixes and improvement. Some improvements are specific to Apps needs and only made for certail views, hence it's kept as a fork.
-
 
 
 ## License
