@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct EventLayoutDescriptor: Identifiable {
     var id: String {

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 extension TimelineView {
     func createLayoutDescriptors(from events: [Event]) -> [EventLayoutDescriptor] {
